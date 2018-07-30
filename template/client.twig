@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+
+	<link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
+	<link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
+	<script src="js/modernizr.js"></script> <!-- Modernizr -->
+	<title>FAQ</title>
+</head>
+<body>
+<header>
+	<h1>Questions of life the universe and everything</h1>
+</header>
+    <div class="addquestion">
+    	<p><a href="?c=question&a=add">Add your question</a></p>
+    </div>
+<section class="cd-faq">
+    <ul class="cd-faq-categories">
+		{% for item in categories %}
+              <li><a href="{{item.category}}">{{item.category}}</a></li>
+        {% endfor %}
+	</ul> <!-- cd-faq-categories -->
+		{% for item in questions %}
+    <div class="cd-faq-items">
+		<ul class="cd-faq-group">
+			<li class="cd-faq-title"><h2>{{item.category}}</h2></li>
+			<li>
+				<a class="cd-faq-trigger" href="#0">{{item.question}}</a>
+				<div class="cd-faq-content">
+					<p class="author">Author: {{item.creator}}</p>
+					<p class="date">Date added: {{item.date_added}}</p>
+					<p>Answer:</p>
+					<p>{{item.answer}}</p>
+				</div> <!-- cd-faq-content -->
+			</li>
+		</ul> <!-- cd-faq-group -->
+	</div> <!-- cd-faq-items -->
+{% endfor %}
+</section> <!-- cd-faq -->
+<script src="js/jquery-2.1.1.js"></script>
+<script src="js/jquery.mobile.custom.min.js"></script>
+<script src="js/main.js"></script> <!-- Resource jQuery -->
+</body>
+</html>

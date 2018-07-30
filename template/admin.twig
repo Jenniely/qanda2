@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+
+	<link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
+	<link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
+	<script src="js/modernizr.js"></script> <!-- Modernizr -->
+	<style type="text/css">
+		td {
+			border: 1px solid gray;
+		}
+	</style>
+	<title>FAQ</title>
+</head>
+<body>
+<header>
+	<h1>Admin of life the universe and everything</h1>
+</header>
+<section class="itemlist">
+	<table>
+		<caption>Список вопросов</caption>
+            <tr>
+            	<td>ID</td>
+                <td>Вопрос</td>
+                <td>Категория</td>
+                <td>Добавлен</td>
+                <td>Автор</td>
+                <td>Email</td>
+                <td>Ответ</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            {% for item in questions %}
+            <tr>
+            	<td>{{item.id}}</td>
+                <td>{{item.question}}</td>
+                <td>{{item.category}}</td>
+                <td>{{item.date_added}}</td>
+                <td>{{item.creator}}</td>
+                <td>{{item.email}}</td>
+                <td>{{item.answer}}</td>
+                <td></td>
+                <td><a href="?c=question&a=update&id={{item.id}}">Изменить</a></td>
+                <td><a href="?c=question&a=update&id={{item.id}}">Удалить</a></td>
+            </tr>
+            {% endfor %}
+	</table>
+</section>
+<section class="cd-faq">
+    <ul class="cd-faq-categories"><!-- а ссылка тут должна вести на контроллер который пересоберет страницу с учетом запроса функции listCat -->
+		{% for item in questions %}
+              <li><a href="{{item.category}}">{{item.category}}</a></li>
+        {% endfor %}
+	</ul> <!-- cd-faq-categories -->
+		{% for item in questions %}
+    <div class="cd-faq-items">
+		<ul class="cd-faq-group">
+			<li class="cd-faq-title"><h2>{{item.category}}</h2></li>
+			<li>
+				<a class="cd-faq-trigger" href="#0">{{item.question}}</a>
+				<div class="cd-faq-content">
+					<p class="author">Author: {{item.creator}}</p>
+					<p class="date">Date added: {{item.date_added}}</p>
+					<p>Answer:</p>
+					<p>{{item.answer}}</p>
+				</div> <!-- cd-faq-content -->
+			</li>
+		</ul> <!-- cd-faq-group -->
+	</div> <!-- cd-faq-items -->
+{% endfor %}
+</section> <!-- cd-faq -->
+<script src="js/jquery-2.1.1.js"></script>
+<script src="js/jquery.mobile.custom.min.js"></script>
+<script src="js/main.js"></script> <!-- Resource jQuery -->
+</body>
+</html>
