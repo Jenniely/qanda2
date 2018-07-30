@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+
+	<link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
+	<link rel="stylesheet" href="css/main.css"> <!-- Resource style -->
+	<script src="js/modernizr.js"></script> <!-- Modernizr -->
+	<title>Add question</title>
+</head>
+<body>
+<div class="cd-faq-add">
+		<form class="cd-faq-addquestion" action="?c=question&a=add" method="post">
+			<div class="textarea">
+		    <textarea  name="question" placeholder="Enter your question" rows="5"></textarea>
+		    </div>
+		    <input type="text" name="creator" placeholder="Enter your name">
+		    <input type="text" name="email" placeholder="Enter your email">
+		    <select name="category"> 
+		 {% for item in categories %}
+            <option value="{{item.category}}">{{item.category}}</option>
+        {% endfor %}
+            </select>
+            <input type="submit" name="submit">
+		</form>
+	</div>
+</body>
