@@ -10,7 +10,7 @@ public function __construct($connection)
 public function getUser($login) 
 {
 	$sql = "SELECT * FROM users WHERE login='$login'";
-	$myUser = $this->connection->query($sql)->fetch(PDO::FETCH_ASSOC);
+	$myUser = $this->connection->query($sql)->fetch(\PDO::FETCH_ASSOC);
 	return($myUser);
 }
 
@@ -39,7 +39,7 @@ public function getAuthorizedUser() {
     }
 
 public function registerNew($login, $password) {
-    $check = $this->connection->query("SELECT user_id FROM users WHERE login='$login'")->fetch(PDO::FETCH_ASSOC);
+    $check = $this->connection->query("SELECT user_id FROM users WHERE login='$login'")->fetch(\PDO::FETCH_ASSOC);
 	if (!empty($check['user_id'])) {
 	echo "Такой пользователь уже зарегистрирован";
 	exit;
@@ -47,7 +47,7 @@ public function registerNew($login, $password) {
 	else 
 	$sql = "INSERT INTO users(`login`, `password`) VALUES ('$login','$password')";
 	$action =  $this->connection->exec($sql);
-	$check =  $this->connection->query("SELECT user_id FROM users WHERE login='$login'")->fetch(PDO::FETCH_ASSOC);
+	$check =  $this->connection->query("SELECT user_id FROM users WHERE login='$login'")->fetch(\PDO::FETCH_ASSOC);
 	if (!empty($check['user_id'])) {
 	echo "Учетная запись создана, теперь вы можете войти.";
 	}
@@ -59,7 +59,7 @@ public function registerNew($login, $password) {
 public function deleteUser($id) 	
     {
 		$sth = $this->connection->prepare('DELETE FROM `users` WHERE id=:id');
-		$sth->bindValue(':id', $id, PDO::PARAM_INT);
+		$sth->bindValue(':id', $id, \PDO::PARAM_INT);
 		return $sth->execute();
 	}
 
@@ -74,13 +74,18 @@ public  function updateUser($id, $parameters)
 		}
 		$sth = $this->connection->prepare('UPDATE `users` SET `'.implode(', `', $update).' WHERE `id`=:id');
 		if (isset($parameters['password'])) {
-			$sth->bindValue(':password', $parameters['password'], PDO::PARAM_INT);
+			$sth->bindValue(':password', $parameters['password'], \PDO::PARAM_INT);
 		}
 		if (isset($parameters['is_admin'])) {
-			$sth->bindValue(':is_admin', $parameters['is_admin'], PDO::PARAM_STR);
+			$sth->bindValue(':is_admin', $parameters['is_admin'], \PDO::PARAM_STR);
 		}
-		$sth->bindValue(':id', $id, PDO::PARAM_INT);
+		$sth->bindValue(':id', $id, \PDO::PARAM_INT);
 		return $sth->execute();
+}
+
+public function logout() {
+	session_destroy();
+	header('Location: index.php');
 }
 
 

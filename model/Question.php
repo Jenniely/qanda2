@@ -30,7 +30,7 @@ class Question {
 	}
 
     public function update($id, $parameters)
-	{
+	{   
 		if (count($parameters) == 0) {
 			return false;
 		}
@@ -43,21 +43,18 @@ class Question {
 			$sth->bindValue(1, $parameters['q.question'], \PDO::PARAM_STR);
 		}
 		if (isset($parameters['q.category'])) {
-			$sth->bindValue(4, $parameters['q.category'], \PDO::PARAM_STR);
+			$sth->bindValue(3, $parameters['q.category'], \PDO::PARAM_STR);
 		}
 		if (isset($parameters['q.creator'])) {
 			$sth->bindValue(2, $parameters['q.creator'], \PDO::PARAM_STR);
 		}
-		if (isset($parameters['a.answer'])) {
-			$sth->bindValue(3, $parameters['a.answer'], \PDO::PARAM_STR);
-		}
-		$sth->bindValue(5, $id, \PDO::PARAM_INT);
+		$sth->bindValue(4, $id, \PDO::PARAM_INT);
 		return $sth->execute();
 	}
 
 	public function listAll()
 	{
-		$sth = $this->connection->prepare('SELECT q.id, q.question, q.category, q.date_added, q.creator, q.email, a.answer FROM `questions` as q left JOIN `answers` AS a ON q.id=a.que_id ORDER BY category');
+		$sth = $this->connection->prepare('SELECT q.id, q.question, q.category, q.date_added, q.creator, q.email, q.is_up, a.answer FROM `questions` as q left JOIN `answers` AS a ON q.id=a.que_id ORDER BY category');
 		if ($sth->execute()) {
 			return $sth->fetchAll(\PDO::FETCH_ASSOC);
 		}
@@ -75,7 +72,7 @@ class Question {
 
 	public function getUnanswered() 
     {
-      $sth = $this->connection->prepare('SELECT * FROM `questions` WHERE is_answered=0 ORDER BY category');
+      $sth = $this->connection->prepare('SELECT * FROM `questions` WHERE is_answered=0 ORDER BY date_added');
 		if ($sth->execute()) {
 			return $sth->fetchAll(\PDO::FETCH_ASSOC);
 		}
@@ -91,10 +88,28 @@ class Question {
 		return false;
     }
 
+    	public function getUnpublished() 
+    	{
+      $sth = $this->connection->prepare('SELECT * FROM `questions` WHERE is_up=0 ORDER BY category');
+		if ($sth->execute()) {
+			return $sth->fetchAll(\PDO::FETCH_ASSOC);
+		}
+		return false;
+    }
+
+        public function getPublished() 
+    	{
+      $sth = $this->connection->prepare('SELECT q.id, q.question, q.category, q.date_added, q.creator, a.answer FROM `questions` as q JOIN `answers` AS a ON q.id=a.que_id WHERE is_up=1 ORDER BY category');
+		if ($sth->execute()) {
+			return $sth->fetchAll(\PDO::FETCH_ASSOC);
+		}
+		return false;
+    }
+
     	public function findCat($category)
 	{
-		$sth = $this->connection->prepare('SELECT * FROM `questions` WHERE category=:category AND is_answered=1');
-		$sth->bindValue(':category', $category, PDO::PARAM_INT);
+		$sth = $this->connection->prepare('SELECT q.id, q.question, q.category, q.date_added, q.creator, a.answer FROM `questions` as q left JOIN `answers` AS a ON q.id=a.que_id WHERE category=:category');
+		$sth->bindValue(':category', $category, \PDO::PARAM_INT);
 		$sth->execute();
 		$result = $sth->fetchAll(\PDO::FETCH_ASSOC);
 		return $result;
@@ -106,6 +121,12 @@ class Question {
 		$sth->execute();
 		$result = $sth->fetchAll(\PDO::FETCH_ASSOC);
 		return $result;
+	}
+
+	public function publish($id, $status) {
+		$sth = $this->connection->prepare("UPDATE questions SET is_up=:is_up WHERE id={$id}");
+		$sth->bindValue(':is_up', $status, \PDO::PARAM_INT);
+		return $sth->execute();
 	}
 
 }
