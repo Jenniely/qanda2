@@ -14,7 +14,7 @@ class QuestionController
     public function show()
     {
         $q = new \Model\Question($this->connection);
-        $questions = $q->getAnswered();
+        $questions = $q->getPublished();
         $categories = $q->showCat();
         echo $this->twig->render('/client.twig', ['questions' => $questions, 'categories' => $categories]);
     }
@@ -22,7 +22,6 @@ class QuestionController
 	public function add()
 	{
        $q = new \Model\Question($this->connection);
-       $questions = $q->getAnswered();
        $categories = $q->showCat();
 	    $errors = [];
         if (count($_POST) > 0) {
@@ -50,11 +49,11 @@ class QuestionController
             if (count($errors) == 0) {
                 $idAdd = $q->add($data);
                 if ($idAdd) {
-                    header('Location: index.php');
+                    header('Location: ?c=question&a=handleContent');
                 }
             }
         }
-        echo $this->twig->render('/add.twig', ['questions' => $questions, 'categories' => $categories]);
+        echo $this->twig->render('/add.twig', ['categories' => $categories]);
     }
 
 	public function update($id)
@@ -75,11 +74,6 @@ class QuestionController
                 } else {
                     $errors['creator'] = 'Error creator';
                 }
-                if (isset($_POST['answer'])) {
-                    $data['a.answer'] = $_POST['answer'];
-                } else {
-                    $errors['answer'] = 'Error answer';
-                }
                 if (isset($_POST['category'])) {
                     $data['q.category'] = $_POST['category'];
                 } else {
@@ -88,7 +82,7 @@ class QuestionController
                 if (count($errors) == 0) {
                     $isUpdate = $q->update($id, $data);
                     if ($isUpdate) {
-                        header('Location: index.php');
+                        header('Location: ?c=question&a=handleContent');
                     }
                 }
         }
@@ -103,9 +97,52 @@ class QuestionController
     public function delete($id)
     {
             $q = new \Model\Question($this->connection);
-            $isDelete = $q->delete($id);
-            if ($isDelete) {
-                header('Location: index.php');
+            $a = new \Model\Answer($this->connection);
+            $qDelete = $q->delete($id);
+            $aDelete = $a->delete($id);
+            if ($qDelete && $aDelete) {
+                header('Location: ?c=question&a=handleContent');
             }
+    }
+
+
+    public function handleContent() {
+        $q = new \Model\Question($this->connection);
+        $questions = $q->listAll();
+        $categories = $q->showCat();
+        echo $this->twig->render('/handlecontent.twig', ['questions' => $questions, 'categories' => $categories]);
+    }
+
+    public function publish($id) {
+        {
+        $q = new \Model\Question($this->connection);
+        $question = $q->findId($questionId);
+        $errors = [];
+        if (isset($_POST['is_up'])) 
+        {
+            $status = $_POST['is_up'];
+            $pubUpdate = $q->publish($id, $status);
+                if ($pubUpdate) 
+                {
+                    header('Location: ?c=question&a=handleContent');
+                }
+        }
+        
+    }
+    }
+
+    public function getUnanswered() {
+        $q = new \Model\Question($this->connection);
+        $questions = $q->getUnanswered();
+        $categories = $q->showCat();
+        echo $this->twig->render('/handlecontent.twig', ['questions' => $questions, 'categories' => $categories]);
+    }
+
+    public function findCat() {
+        $q = new \Model\Question($this->connection);
+        $categories = $q->showCat();
+        $category = $_POST['category'];
+        $questions = $q->findCat($category);
+        echo $this->twig->render('/handlecontent.twig', ['questions' => $questions, 'categories' => $categories]);
     }
 }
