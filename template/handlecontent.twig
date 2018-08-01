@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
+    <link rel="stylesheet" href="css/style.css"> 
+    <script src="js/modernizr.js"></script> 
+    <style type="text/css">
+        td {
+            border: 1px solid gray;
+        }
+        .wrapper {
+            width: 960px;
+            margin: 0 auto;
+            text-align: center;
+
+        }
+
+        .footerdiv {
+            margin: 15px auto;
+            background: gray;
+            width: 40%;
+            padding: 10px;
+        }
+
+        .footerdiv a {
+          color: white;
+        }
+
+        .filterswrapper div {
+            width: 45%;
+            height: 50px;
+            background: gray;
+            display: inline-block;
+            padding: 10px;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .filterswrapper div a {
+            color: white;
+        }
+    </style>
+    <title>FAQ admin panel</title>
+</head>
+<body>
+    <header>
+    <h1>Admin of life the universe and everything</h1>
+</header>
+<section class="wrapper">
+<div class="filterswrapper">
+    <div><a href="?c=question&a=getUnanswered">Show unanswered</a></div>
+    <div>
+        <form class="sortcategory" action="?c=question&a=findCat" method="post">
+            <label>Show in category</label>
+            <select name="category"> 
+            {% for item in categories %}
+                <option value="{{item.category}}">{{item.category}}</option>
+            {% endfor %}
+            </select>
+            <input type="submit" name="submit" value="Send">
+    </div>
+</div>
+<table>
+		<caption>Questions</caption>
+            <tr>
+            	<td>ID</td>
+                <td>Question</td>
+                <td></td>
+                <td>Category</td>
+                <td>Added</td>
+                <td>Author</td>
+                <td>Email</td>
+                <td>Answer</td>
+                <td></td>
+                <td></td>
+                <td>Up</td>
+            </tr>
+            {% for item in questions %}
+            <tr>
+            	<td>{{item.id}}</td>
+                <td>{{item.question}}</td>
+                <td><a href="?c=question&a=update&id={{item.id}}">Изменить вопрос</a></td>
+                <td>{{item.category}}</td>
+                <td>{{item.date_added}}</td>
+                <td>{{item.creator}}</td>
+                <td>{{item.email}}</td>
+                <td>{{item.answer}}</td>
+                <td><a href="?c=answer&a=modify&id={{item.id}}">Изменить ответ</a></td>
+                <td><a href="?c=question&a=delete&id={{item.id}}">Удалить</a></td>
+                <td>
+                    <form class="publish" action="?c=question&a=publish&id={{item.id}}" method="post">
+                        <select name="is_up">
+                         <option value="1" {% if item.is_up == 1 %} selected {% endif %}>Yes</option> 
+                         <option value="0" {% if item.is_up == 0 %} selected {% endif %}>No</option> 
+                         </select>
+                     <input type="submit" name="submit" value="Send"></form></td>
+            </tr>
+            {% endfor %}
+	</table>
+        <div class="footerdiv"><a href="?c=auth&a=manage">Вернуться назад</div>
+    <div class="footerdiv"><a href="?c=auth&a=logout">Разлогиниться</a></div>
+</section>
+</body>

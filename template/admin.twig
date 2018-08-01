@@ -7,73 +7,67 @@
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
 
 	<link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
-	<link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
+	<link rel="stylesheet" href="css/style.css"> 
 	<script src="js/modernizr.js"></script> <!-- Modernizr -->
 	<style type="text/css">
 		td {
 			border: 1px solid gray;
 		}
+
+		.bigbutton {
+			width: 400px;
+			height: 100px;
+			background: white;
+			display: inline-block;
+			padding: 45px 30px;
+			margin: 70px 30px;
+			vertical-align: middle;
+		}
+
+		.wrapper {
+			width: 960px;
+			height: 300px;
+			margin: 0 auto;
+			background: gray;
+			text-align: center;
+
+		}
+
+		header {
+			width: 100%;
+			height: 200px;
+			text-align: center;
+			color: white;
+		}
+
+		.hello {
+			color: white;
+			padding: 15px 30px;
+		}
+		        .footerdiv {
+            margin: 15px auto;
+            background: gray;
+            width: 40%;
+            padding: 10px;
+        }
+
+        .footerdiv a {
+          color: white;
 	</style>
-	<title>FAQ</title>
+	<title>FAQ admin panel</title>
 </head>
 <body>
 <header>
 	<h1>Admin of life the universe and everything</h1>
 </header>
-<section class="itemlist">
-	<table>
-		<caption>Список вопросов</caption>
-            <tr>
-            	<td>ID</td>
-                <td>Вопрос</td>
-                <td>Категория</td>
-                <td>Добавлен</td>
-                <td>Автор</td>
-                <td>Email</td>
-                <td>Ответ</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            {% for item in questions %}
-            <tr>
-            	<td>{{item.id}}</td>
-                <td>{{item.question}}</td>
-                <td>{{item.category}}</td>
-                <td>{{item.date_added}}</td>
-                <td>{{item.creator}}</td>
-                <td>{{item.email}}</td>
-                <td>{{item.answer}}</td>
-                <td></td>
-                <td><a href="?c=question&a=update&id={{item.id}}">Изменить</a></td>
-                <td><a href="?c=question&a=update&id={{item.id}}">Удалить</a></td>
-            </tr>
-            {% endfor %}
-	</table>
-</section>
-<section class="cd-faq">
-    <ul class="cd-faq-categories"><!-- а ссылка тут должна вести на контроллер который пересоберет страницу с учетом запроса функции listCat -->
-		{% for item in questions %}
-              <li><a href="{{item.category}}">{{item.category}}</a></li>
-        {% endfor %}
-	</ul> <!-- cd-faq-categories -->
-		{% for item in questions %}
-    <div class="cd-faq-items">
-		<ul class="cd-faq-group">
-			<li class="cd-faq-title"><h2>{{item.category}}</h2></li>
-			<li>
-				<a class="cd-faq-trigger" href="#0">{{item.question}}</a>
-				<div class="cd-faq-content">
-					<p class="author">Author: {{item.creator}}</p>
-					<p class="date">Date added: {{item.date_added}}</p>
-					<p>Answer:</p>
-					<p>{{item.answer}}</p>
-				</div> <!-- cd-faq-content -->
-			</li>
-		</ul> <!-- cd-faq-group -->
-	</div> <!-- cd-faq-items -->
-{% endfor %}
-</section> <!-- cd-faq -->
+<div class="wrapper">
+	<div class="hello">Приветствую, {{user.login}}!</div>
+	<a href="?c=question&a=handleContent"><div class="bigbutton">Manage content</div></a>
+	<a href="?c=question&a=handleUsers"><div class="bigbutton">Manage users</div></a>
+	        <div class="footerdiv"><a href="?c=question&a=show">Вернуться назад</div>
+    <div class="footerdiv"><a href="?c=auth&a=logout">Разлогиниться</a></div>
+</div>
+
 <script src="js/jquery-2.1.1.js"></script>
 <script src="js/jquery.mobile.custom.min.js"></script>
 <script src="js/main.js"></script> <!-- Resource jQuery -->
