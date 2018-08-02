@@ -49,7 +49,7 @@ class QuestionController
             if (count($errors) == 0) {
                 $idAdd = $q->add($data);
                 if ($idAdd) {
-                    header('Location: ?c=question&a=handleContent');
+                    header('Location: ?c=question&a=show');
                 }
             }
         }
@@ -108,9 +108,10 @@ class QuestionController
 
     public function handleContent() {
         $q = new \Model\Question($this->connection);
+        $stats = $q->showStat();
         $questions = $q->listAll();
         $categories = $q->showCat();
-        echo $this->twig->render('/handlecontent.twig', ['questions' => $questions, 'categories' => $categories]);
+        echo $this->twig->render('/handlecontent.twig', ['questions' => $questions, 'categories' => $categories, 'stats' => $stats]);
     }
 
     public function publish($id) {

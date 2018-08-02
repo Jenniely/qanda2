@@ -19,6 +19,7 @@ class AnswerController
     {
     	$a = new \Model\Answer($this->connection);
     	$check = $a->isAnswered($questionId);
+        print_r($check);
     	    	if ($check) {
     		$this->update($questionId);
     	}
