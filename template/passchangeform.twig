@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
+  <link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
+  <link rel="stylesheet" href="css/bootstrap.css"> 
+  <link rel="stylesheet" href="css/main.css"> 
+  <script src="js/modernizr.js"></script> <!-- Modernizr -->
+  <title>FAQ</title>
+</head>
+<body>
+  <div class='passchangeform'>
+  <form action="?c=auth&a=updateUser&id={{user.user_id}}" method="post">
+  <div class="form-group">
+    <label for="InputPassword1">Задайте новый пароль для {{user.login}}</label>
+    <input type="password" class="form-control" name="password" placeholder="Set new password">
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+</div>
+</body>
