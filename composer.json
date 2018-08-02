@@ -1,5 +1,6 @@
 {
 	"require": {
+		"ext-PDO": "*",
 		"twbs/bootstrap": "4.1.2",
 		"twig/twig": "~1.0"
 	},

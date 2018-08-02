@@ -1,19 +1,24 @@
 <?php
+
 namespace Controller;
 
-class AuthController {
+use \Model\Auth;
 
-	 public function __construct($connection, $twig) 
+class AuthController
+{
+
+    public function __construct($connection, $twig)
     {
-    $this->connection = $connection;
-    $this->twig = $twig;
+        $this->connection = $connection;
+        $this->twig = $twig;
     }
 
-    public function login() {
-       $auth = new \Model\Auth($this->connection);
-	   $errors = [];
+    public function login()
+    {
+        $auth = new Auth($this->connection);
+        $errors = [];
         if (count($_POST) > 0) {
-            $data = [];
+//            $data = [];
             if (isset($_POST['login'])) {
                 $login = $_POST['login'];
             } else {
@@ -32,34 +37,39 @@ class AuthController {
             }
         }
         echo $this->twig->render('/authform.twig');
-        }
+    }
 
- public function logout() {
-    $auth = new \Model\Auth($this->connection);
-    return $auth->logout();
- }
+    public function logout()
+    {
+        $auth = new Auth($this->connection);
 
- public function manage() {
-        $auth = new \Model\Auth($this->connection);
+        return $auth->logout();
+    }
+
+    public function manage()
+    {
+        $auth = new Auth($this->connection);
         $check = $auth->isAdmin();
         $user = $_SESSION['user'];
         if ($check) {
             echo $this->twig->render('/admin.twig', ['user' => $user]);
-        }
-        else {
+        } else {
             echo $this->twig->render('/authform.twig');
         }
     }
 
-    public function registerNew() {
+    public function registerNew()
+    {
 
     }
 
-    public function deleteUser() {
+    public function deleteUser()
+    {
 
     }
 
-    public function updateUser() {
+    public function updateUser()
+    {
 
     }
 }

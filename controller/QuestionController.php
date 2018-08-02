@@ -1,14 +1,18 @@
 <?php
+
 namespace Controller;
+
 class QuestionController
 {
- 
- public $connection;
+    /** @var \PDO */
+    private $connection;
+    /** @var \Twig_Environment */
+    private $twig;
 
-    public function __construct($connection, $twig) 
+    public function __construct($connection, $twig)
     {
-    $this->connection = $connection;
-    $this->twig = $twig;
+        $this->connection = $connection;
+        $this->twig = $twig;
     }
 
     public function show()
@@ -19,11 +23,11 @@ class QuestionController
         echo $this->twig->render('/client.twig', ['questions' => $questions, 'categories' => $categories]);
     }
 
-	public function add()
-	{
-       $q = new \Model\Question($this->connection);
-       $categories = $q->showCat();
-	    $errors = [];
+    public function add()
+    {
+        $q = new \Model\Question($this->connection);
+        $categories = $q->showCat();
+        $errors = [];
         if (count($_POST) > 0) {
             $data = [];
             if (isset($_POST['question'])) {
@@ -56,89 +60,92 @@ class QuestionController
         echo $this->twig->render('/add.twig', ['categories' => $categories]);
     }
 
-	public function update($id)
-	{
+    public function update($id)
+    {
         $q = new \Model\Question($this->connection);
         $questions = $q->listAll();
         $categories = $q->showCat();
         $errors = [];
-		if (count($_POST) > 0) {
+        if (count($_POST) > 0) {
             $data = [];
             if (isset($_POST['question'])) {
-                    $data['q.question'] = $_POST['question'];
-                } else {
-                    $errors['question'] = 'Error question';
+                $data['q.question'] = $_POST['question'];
+            } else {
+                $errors['question'] = 'Error question';
+            }
+            if (isset($_POST['creator'])) {
+                $data['q.creator'] = $_POST['creator'];
+            } else {
+                $errors['creator'] = 'Error creator';
+            }
+            if (isset($_POST['category'])) {
+                $data['q.category'] = $_POST['category'];
+            } else {
+                $errors['creator'] = 'Error creator';
+            }
+            if (count($errors) == 0) {
+                $isUpdate = $q->update($id, $data);
+                if ($isUpdate) {
+                    header('Location: ?c=question&a=handleContent');
                 }
-                if (isset($_POST['creator'])) {
-                    $data['q.creator'] = $_POST['creator'];
-                } else {
-                    $errors['creator'] = 'Error creator';
-                }
-                if (isset($_POST['category'])) {
-                    $data['q.category'] = $_POST['category'];
-                } else {
-                    $errors['creator'] = 'Error creator';
-                }
-                if (count($errors) == 0) {
-                    $isUpdate = $q->update($id, $data);
-                    if ($isUpdate) {
-                        header('Location: ?c=question&a=handleContent');
-                    }
-                }
+            }
         }
         foreach ($questions as $subarray => $question) {
             if ($question['id'] == $id) {
-            $data = $question;
+                $data = $question;
             }
         }
-            echo $this->twig->render('/update.twig', ['question' => $data, 'categories' => $categories]);
-	}
+        echo $this->twig->render('/update.twig', ['question' => $data, 'categories' => $categories]);
+    }
 
     public function delete($id)
     {
-            $q = new \Model\Question($this->connection);
-            $a = new \Model\Answer($this->connection);
-            $qDelete = $q->delete($id);
-            $aDelete = $a->delete($id);
-            if ($qDelete && $aDelete) {
-                header('Location: ?c=question&a=handleContent');
-            }
+        $q = new \Model\Question($this->connection);
+        $a = new \Model\Answer($this->connection);
+        $qDelete = $q->delete($id);
+        $aDelete = $a->delete($id);
+        if ($qDelete && $aDelete) {
+            header('Location: ?c=question&a=handleContent');
+        }
     }
 
 
-    public function handleContent() {
+    public function handleContent()
+    {
         $q = new \Model\Question($this->connection);
         $questions = $q->listAll();
         $categories = $q->showCat();
         echo $this->twig->render('/handlecontent.twig', ['questions' => $questions, 'categories' => $categories]);
     }
 
-    public function publish($id) {
+    public function publish($id)
+    {
         {
-        $q = new \Model\Question($this->connection);
-        $question = $q->findId($questionId);
-        $errors = [];
-        if (isset($_POST['is_up'])) 
-        {
-            $status = $_POST['is_up'];
-            $pubUpdate = $q->publish($id, $status);
-                if ($pubUpdate) 
-                {
+            $q = new \Model\Question($this->connection);
+//            $question = $q->findId($questionId);
+//            $errors = [];
+            if (isset($_POST['is_up'])) {
+                $status = $_POST['is_up'];
+                $pubUpdate = $q->publish($id, $status);
+                if ($pubUpdate) {
                     header('Location: ?c=question&a=handleContent');
+                    exit;
                 }
+            }
+
         }
-        
-    }
     }
 
-    public function getUnanswered() {
+    public function getUnanswered()
+    {
         $q = new \Model\Question($this->connection);
         $questions = $q->getUnanswered();
         $categories = $q->showCat();
         echo $this->twig->render('/handlecontent.twig', ['questions' => $questions, 'categories' => $categories]);
     }
 
-    public function findCat() {
+    public function findCat()
+    {
         $q = new \Model\Question($this->connection);
         $categories = $q->showCat();
         $category = $_POST['category'];
