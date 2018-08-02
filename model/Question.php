@@ -54,7 +54,7 @@ class Question {
 
 	public function listAll()
 	{
-		$sth = $this->connection->prepare('SELECT q.id, q.question, q.category, q.date_added, q.creator, q.email, q.is_up, a.answer FROM `questions` as q left JOIN `answers` AS a ON q.id=a.que_id ORDER BY category');
+		$sth = $this->connection->prepare("SELECT q.id, q.question, q.category, q.date_added, q.creator, q.email, q.is_up, q.is_answered, a.answer FROM `questions` as q left JOIN `answers` AS a ON q.id=a.que_id ORDER BY category");
 		if ($sth->execute()) {
 			return $sth->fetchAll(\PDO::FETCH_ASSOC);
 		}
@@ -99,7 +99,7 @@ class Question {
 
         public function getPublished() 
     	{
-      $sth = $this->connection->prepare('SELECT q.id, q.question, q.category, q.date_added, q.creator, a.answer FROM `questions` as q JOIN `answers` AS a ON q.id=a.que_id WHERE is_up=1 ORDER BY category');
+    		$sth = $this->connection->prepare('SELECT q.id, q.question, q.category, q.date_added, q.creator, a.answer FROM `questions` as q JOIN `answers` AS a ON q.id=a.que_id WHERE is_up=1 ORDER BY category');
 		if ($sth->execute()) {
 			return $sth->fetchAll(\PDO::FETCH_ASSOC);
 		}
@@ -127,6 +127,35 @@ class Question {
 		$sth = $this->connection->prepare("UPDATE questions SET is_up=:is_up WHERE id={$id}");
 		$sth->bindValue(':is_up', $status, \PDO::PARAM_INT);
 		return $sth->execute();
+	}
+
+	public function showStat() {
+		$q = new \Model\Question($this->connection);
+        $questions = $q->listAll();
+        $categories = $q->showCat();
+        foreach ($categories as $category) {
+        	$cat = $category['category'];
+        	$result[$cat] = array( );
+        }
+        foreach ($questions as $question) {
+        	$key = $question['category'];
+        	array_push($result[$key], $question);
+        }
+        foreach ($result as $key => $category) {
+        	$questionCount = (count($category));
+			$unansweredCount = 0;
+			$publishCount = 0;
+			foreach ($category as $question) {
+				if (!$question['is_answered']) {
+					$unansweredCount++;
+				}
+				if ($question['is_up'] == 1) {
+					$publishCount++;
+				}
+			}
+			$stats[] = [ 'category' => $key,'total' => $questionCount, 'unanswered' =>  $unansweredCount, 'published' => $publishCount];
+		}
+		return $stats;
 	}
 
 }
