@@ -146,4 +146,12 @@ class QuestionController
         $questions = $q->findCat($category);
         echo $this->twig->render('/handlecontent.twig', ['questions' => $questions, 'categories' => $categories]);
     }
+
+    public function displayCat() {
+        $q = new \Model\Question($this->connection);
+        $categories = $q->showCat();
+        $category = $_GET['category'];
+        $questions = $q->findCat($category);
+        echo $this->twig->render('/client.twig', ['questions' => $questions, 'categories' => $categories]);
+    }
 }
