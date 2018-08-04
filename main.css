@@ -1,0 +1,31 @@
+.authform {
+	width: 30%;
+	margin: auto;
+	border: 1px solid gray;
+}
+
+.login {
+	margin: 30px 15px;
+}
+
+.cd-faq-add {
+	width: 70%;
+	margin: auto;
+
+}
+
+.textarea {
+ width: 100%;
+
+}
+
+textarea {
+	margin: 0 auto;
+	font-size: 14px;
+	color: black;
+	line-height: 1.2;
+	text-align: left;
+  width: 90%;
+  padding: 15px 15px;
+  box-sizing: border-box;
+}
