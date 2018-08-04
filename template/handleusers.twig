@@ -27,7 +27,7 @@
             padding: 10px;
         }
 
-        .footerdiv a {
+        .footerdiv a, .createnew a {
           color: white;
         }
 
@@ -45,20 +45,27 @@
             color: white;
         }
 
-        .statistics {
-            text-align: left;
-            margin: 30px 10px;
-
+        .createnew {
+            margin: 15px auto;
+            background: green;
+            width: 40%;
+            padding: 10px;
+        }
+        .usertable {
+            width: 80%;
+            padding: 10px;
+            text-align: center;
+            margin: 0 auto;
         }
     </style>
-    <title>FAQ admin panel</title>
+    <title>Users admin panel</title>
 </head>
 <body>
     <header>
     <h1>Admin of life the universe and everything</h1>
 </header>
 <section class="wrapper">
-<div class="filterswrapper">
+<!--<div class="filterswrapper">
     <div><a href="?c=question&a=handleContent">Show all</a></div>
     <div><a href="?c=question&a=getUnanswered">Show unanswered</a></div>
     <div>
@@ -71,51 +78,26 @@
             </select>
             <input type="submit" name="submit" value="Send">
     </div>
-</div>
-<div class="statistics">
-    <ul>
-    {% for item in stats %}
-    <li>Category <strong>{{item.category}}</strong>: <strong>{{item.total}}</strong> questions total, <strong>{{item.unanswered}}</strong> unanswered, <strong>{{item.published}}</strong> published.</li>
-    {% endfor %}
-    </ul>
-</div>
-<table>
-		<caption>Questions</caption>
+</div>-->
+<table class="usertable">
+		<caption>Users</caption>
             <tr>
             	<td>ID</td>
-                <td>Question</td>
-                <td></td>
-                <td>Category</td>
-                <td>Added</td>
-                <td>Author</td>
-                <td>Email</td>
-                <td>Answer</td>
+                <td>Login</td>
                 <td></td>
                 <td></td>
-                <td>Up</td>
             </tr>
-            {% for item in questions %}
+                            {% for item in users%}
             <tr>
-            	<td>{{item.id}}</td>
-                <td>{{item.question}}</td>
-                <td><a href="?c=question&a=update&id={{item.id}}">Modify</a></td>
-                <td>{{item.category}}</td>
-                <td>{{item.date_added}}</td>
-                <td>{{item.creator}}</td>
-                <td>{{item.email}}</td>
-                <td>{{item.answer}}</td>
-                <td><a href="?c=answer&a=modify&id={{item.id}}">Modify</a></td>
-                <td><a href="?c=question&a=delete&id={{item.id}}">Delete</a></td>
-                <td>
-                    <form class="publish" action="?c=question&a=publish&id={{item.id}}" method="post">
-                        <select name="is_up">
-                         <option value="1" {% if item.is_up == 1 %} selected {% endif %}>Yes</option> 
-                         <option value="0" {% if item.is_up == 0 %} selected {% endif %}>No</option> 
-                         </select>
-                     <input type="submit" name="submit" value="Send"></form></td>
+
+            	<td>{{item.user_id}}</td>
+                <td>{{item.login}}</td>
+                <td><a href="?c=auth&a=updateUser&id={{item.id_user}}">Set new password</a></td>
+                <td><a href="?c=auth&a=deleteUser&id={{item.id_user}}">Delete</a></td>
             </tr>
-            {% endfor %}
+                     {% endfor %}
 	</table>
+    <div class="createnew"><a href="?c=auth&a=registerNew">Create new user</a></div>
         <div class="footerdiv"><a href="?c=auth&a=manage">Вернуться назад</div>
     <div class="footerdiv"><a href="?c=auth&a=logout">Разлогиниться</a></div>
 </section>

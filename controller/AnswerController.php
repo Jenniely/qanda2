@@ -24,13 +24,13 @@ class AnswerController
 
     public function modify($questionId)
     {
-        $a = new \Model\Answer($this->connection);
-        $check = $a->isAnswered($questionId);
-        if ($check) {
-            $this->update($questionId);
-        } else {
-            $this->add($questionId);
-        }
+    	  $a = new \Model\Answer($this->connection);
+    	  $check = $a->isAnswered($questionId);
+    	  if ($check) {
+    		$this->update($questionId);
+    	  } else {
+    		$this->add($questionId);
+    	  }
     }
 
     public function add($questionId)

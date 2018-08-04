@@ -53,7 +53,7 @@ class QuestionController
             if (count($errors) == 0) {
                 $idAdd = $q->add($data);
                 if ($idAdd) {
-                    header('Location: ?c=question&a=handleContent');
+                    header('Location: ?c=question&a=show');
                 }
             }
         }
@@ -113,9 +113,10 @@ class QuestionController
     public function handleContent()
     {
         $q = new \Model\Question($this->connection);
+        $stats = $q->showStat();
         $questions = $q->listAll();
         $categories = $q->showCat();
-        echo $this->twig->render('/handlecontent.twig', ['questions' => $questions, 'categories' => $categories]);
+        echo $this->twig->render('/handlecontent.twig', ['questions' => $questions, 'categories' => $categories, 'stats' => $stats]);
     }
 
     public function publish($id)
@@ -151,5 +152,13 @@ class QuestionController
         $category = $_POST['category'];
         $questions = $q->findCat($category);
         echo $this->twig->render('/handlecontent.twig', ['questions' => $questions, 'categories' => $categories]);
+    }
+
+    public function displayCat() {
+        $q = new \Model\Question($this->connection);
+        $categories = $q->showCat();
+        $category = $_GET['category'];
+        $questions = $q->findCat($category);
+        echo $this->twig->render('/client.twig', ['questions' => $questions, 'categories' => $categories]);
     }
 }

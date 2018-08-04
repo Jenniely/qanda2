@@ -65,7 +65,8 @@ class Answer {
 	public function isAnswered($questionId) {
 		$sth = $this->connection->prepare('SELECT is_answered FROM `questions` WHERE id=:id');
 		$sth->bindValue(':id', $questionId, \PDO::PARAM_INT);
-		$result = $sth->execute();
+		$sth->execute();
+		$result = $sth->fetch(\PDO::FETCH_ASSOC);
 		if ($result == 1) {
 			return true;
 		}

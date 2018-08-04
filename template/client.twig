@@ -13,6 +13,28 @@
 		.addquestion {
 			margin: 0 auto;
 		}
+
+	
+		.cd-faq-categories1 a {
+            display: block;
+            overflow: hidden;
+            height: 40px;
+
+  line-height: 40px;
+  padding: 0 28px 0 16px;
+  background-color: gray;
+  color: #ffffff;
+  white-space: nowrap;
+  border-bottom: 1px solid #555b61;
+  text-overflow: ellipsis;
+
+		}
+       
+       .categorylist {
+display: inline-block;
+       }
+
+
 	</style><!-- Modernizr -->
 	<title>FAQ</title>
 </head>
@@ -27,12 +49,14 @@
     	<p><a href="?c=auth&a=manage">Admin access</a></p>
     </div>
 <section class="cd-faq">
-    <ul class="cd-faq-categories">
+	<div class="categoriescontainer">
+    <ul class="cd-faq-categories1">
 		{% for item in categories %}
-              <li><a href="{{item.category}}">{{item.category}}</a></li>
+              <li class="categorylist"><a href="?c=question&a=displayCat&category={{item.category}}">{{item.category}}</a></li>
         {% endfor %}
 	</ul> <!-- cd-faq-categories -->
 		{% for item in questions %}
+		</div>
     <div class="cd-faq-items">
 		<ul class="cd-faq-group">
 			<li class="cd-faq-title"><h2>{{item.category}}</h2></li>
