@@ -1,19 +1,23 @@
 <?php
+
 namespace Controller;
 
-class AuthController {
+use \Model\Auth;
 
-	 public function __construct($connection, $twig) 
+class AuthController
+{
+
+    public function __construct($connection, $twig)
     {
-    $this->connection = $connection;
-    $this->twig = $twig;
+        $this->connection = $connection;
+        $this->twig = $twig;
     }
 
-    public function login() {
-       $auth = new \Model\Auth($this->connection);
-	   $errors = [];
+    public function login()
+    {
+        $auth = new Auth($this->connection);
+        $errors = [];
         if (count($_POST) > 0) {
-            $data = [];
             if (isset($_POST['login'])) {
                 $login = $_POST['login'];
             } else {
@@ -32,27 +36,27 @@ class AuthController {
             }
         }
         echo $this->twig->render('/authform.twig');
-        }
+    }
 
- public function logout() {
-    $auth = new \Model\Auth($this->connection);
-    return $auth->logout();
- }
+    public function logout()
+    {
+        $auth = new Auth($this->connection);
+        return $auth->logout();
+    }
 
  public function manage() {
-        $auth = new \Model\Auth($this->connection);
+        $auth = new Auth($this->connection);
         $check = $auth->isAuthorized();
         if ($check) {
             $user = $_SESSION['user'];
             echo $this->twig->render('/admin.twig', ['user' => $user]);
-        }
-        else {
+        } else {
             echo $this->twig->render('/authform.twig');
         }
     }
 
-    public function registerNew() {
-       $auth = new \Model\Auth($this->connection);
+  public function registerNew() {
+        $auth = new Auth($this->connection);
         $errors = [];
         if (count($_POST) > 0) {
             if (isset($_POST['login'])) {
@@ -76,7 +80,7 @@ class AuthController {
     }
 
     public function deleteUser($id) {
-        $auth = new \Model\Auth($this->connection);
+        $auth = new Auth($this->connection);
         $delete = $auth->deleteUser($id);
             if ($delete) {
                 header('Location: ?c=auth&a=handleusers');
@@ -86,7 +90,7 @@ class AuthController {
 
     public function updateUser($id) {
         $id = intval($id);
-        $auth = new \Model\Auth($this->connection);
+        $auth = new Auth($this->connection);
         $user = $auth->findUser($id);
         if (count($_POST) > 0) {
         $password = $_POST['password'];
@@ -102,7 +106,7 @@ class AuthController {
     }
 
         public function handleUsers() {
-        $auth = new \Model\Auth($this->connection);
+        $auth = new Auth($this->connection);
         $users = $auth->listAll();
         echo $this->twig->render('/handleusers.twig', ['users' => $users]);
     }
