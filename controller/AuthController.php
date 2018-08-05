@@ -4,6 +4,7 @@ namespace Controller;
 
 use \Model\Auth;
 
+class AuthController
 {
     public function __construct($connection, $twig)
     {
