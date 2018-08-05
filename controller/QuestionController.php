@@ -2,6 +2,9 @@
 
 namespace Controller;
 
+use \Model\Question;
+use \Model\Answer;
+
 class QuestionController
 {
     /** @var \PDO */
@@ -17,7 +20,7 @@ class QuestionController
 
     public function show()
     {
-        $q = new \Model\Question($this->connection);
+        $q = new Question($this->connection);
         $questions = $q->getPublished();
         $categories = $q->showCat();
         echo $this->twig->render('/client.twig', ['questions' => $questions, 'categories' => $categories]);
@@ -25,7 +28,7 @@ class QuestionController
 
     public function add()
     {
-        $q = new \Model\Question($this->connection);
+        $q = new Question($this->connection);
         $categories = $q->showCat();
         $errors = [];
         if (count($_POST) > 0) {
@@ -62,7 +65,7 @@ class QuestionController
 
     public function update($id)
     {
-        $q = new \Model\Question($this->connection);
+        $q = new Question($this->connection);
         $questions = $q->listAll();
         $categories = $q->showCat();
         $errors = [];
@@ -100,8 +103,8 @@ class QuestionController
 
     public function delete($id)
     {
-        $q = new \Model\Question($this->connection);
-        $a = new \Model\Answer($this->connection);
+        $q = new Question($this->connection);
+        $a = new Answer($this->connection);
         $qDelete = $q->delete($id);
         $aDelete = $a->delete($id);
         if ($qDelete && $aDelete) {
@@ -109,10 +112,9 @@ class QuestionController
         }
     }
 
-
     public function handleContent()
     {
-        $q = new \Model\Question($this->connection);
+        $q = new Question($this->connection);
         $stats = $q->showStat();
         $questions = $q->listAll();
         $categories = $q->showCat();
@@ -121,25 +123,20 @@ class QuestionController
 
     public function publish($id)
     {
-        {
-            $q = new \Model\Question($this->connection);
-//            $question = $q->findId($questionId);
-//            $errors = [];
-            if (isset($_POST['is_up'])) {
-                $status = $_POST['is_up'];
-                $pubUpdate = $q->publish($id, $status);
-                if ($pubUpdate) {
-                    header('Location: ?c=question&a=handleContent');
-                    exit;
-                }
+        $q = new Question($this->connection);
+        if (isset($_POST['is_up'])) {
+            $status = $_POST['is_up'];
+            $pubUpdate = $q->publish($id, $status);
+            if ($pubUpdate) {
+                header('Location: ?c=question&a=handleContent');
+                exit;
             }
-
         }
     }
 
     public function getUnanswered()
     {
-        $q = new \Model\Question($this->connection);
+        $q = new Question($this->connection);
         $questions = $q->getUnanswered();
         $categories = $q->showCat();
         echo $this->twig->render('/handlecontent.twig', ['questions' => $questions, 'categories' => $categories]);
@@ -147,15 +144,16 @@ class QuestionController
 
     public function findCat()
     {
-        $q = new \Model\Question($this->connection);
+        $q = new Question($this->connection);
         $categories = $q->showCat();
         $category = $_POST['category'];
         $questions = $q->findCat($category);
         echo $this->twig->render('/handlecontent.twig', ['questions' => $questions, 'categories' => $categories]);
     }
 
-    public function displayCat() {
-        $q = new \Model\Question($this->connection);
+    public function displayCat() 
+    {
+        $q = new Question($this->connection);
         $categories = $q->showCat();
         $category = $_GET['category'];
         $questions = $q->findCat($category);
