@@ -4,7 +4,6 @@ namespace Controller;
 
 class Router
 {
-
     /**
      * @var string
      */
@@ -13,23 +12,21 @@ class Router
      * @var string
      */
     private $action = 'show';
-
     /**
      * @var \PDO
      */
     private $connection;
-
     /**
      * @var \Twig_Environment
      */
     private $twig;
-
+    
     public function __construct(\PDO $connection, \Twig_Environment $twig)
     {
         $this->connection = $connection;
         $this->twig = $twig;
     }
-
+    
     public function route()
     {
         if (isset($_GET['c'], $_GET['a'])) {
@@ -37,10 +34,6 @@ class Router
             $this->action = $_GET['a'];
         }
         $controllerText = $this->controller . 'Controller';
-        //        $controllerFile = 'controller/' . ucfirst($controllerText) . '.php';
-        //        if (is_file($controllerFile))
-        //        {
-        //          include $controllerFile;  -- этого быть не долго, есть же автозагрузчик
         $controllerText = 'Controller\\' . $controllerText;
         if (class_exists($controllerText)) {
             $controller = new $controllerText($this->connection, $this->twig);
@@ -55,7 +48,5 @@ class Router
                 $controller->$a();
             }
         }
-        //        }
     }
-
 }
