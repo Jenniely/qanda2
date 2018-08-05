@@ -2,44 +2,47 @@
 
 namespace Controller;
 
+use \Model\Answer;
+use \Model\Question;
+
 class AnswerController
 {
     /** @var \PDO */
     private $connection;
     /** @var \Twig_Environment */
     private $twig;
-
-    public function __construct($connection, $twig)
+    
+public function __construct($connection, $twig) 
     {
-        $this->connection = $connection;
-        $this->twig = $twig;
+    $this->connection = $connection;
+    $this->twig = $twig;
     }
 
     public function show($questionId)
     {
-        $a = new \Model\Answer($this->connection);
-
-        return $a->displayAnswer($questionId);
+        $a = new Answer($this->connection);
+        return $a->displayAnswer($questionId);   
     }
 
     public function modify($questionId)
     {
-    	  $a = new \Model\Answer($this->connection);
-    	  $check = $a->isAnswered($questionId);
-    	  if ($check) {
-    		$this->update($questionId);
-    	  } else {
-    		$this->add($questionId);
-    	  }
+        $a = new Answer($this->connection);
+        $check = $a->isAnswered($questionId);
+        if ($check) {
+            $this->update($questionId);
+        }
+        else {
+            $this->add($questionId);
+        }
     }
 
     public function add($questionId)
     {
-        $a = new \Model\Answer($this->connection);
-        $q = new \Model\Question($this->connection);
+        $a = new Answer($this->connection);
+        $q = new Question($this->connection);
         $question = $q->findId($questionId);
         $errors = [];
-        if (\count($_POST) > 0) {
+        if (count($_POST) > 0) {
             $data = [];
             if (isset($_POST['answer'])) {
                 $data['answer'] = $_POST['answer'];
@@ -59,9 +62,9 @@ class AnswerController
 
     public function update($questionId)
     {
-        $a = new \Model\Answer($this->connection);
+        $a = new Answer($this->connection);
         $answer = $a->displayAnswer($questionId);
-        $q = new \Model\Question($this->connection);
+        $q = new Question($this->connection);
         $question = $q->findId($questionId);
         $errors = [];
         if (count($_POST) > 0) {
@@ -80,5 +83,6 @@ class AnswerController
             }
         }
         echo $this->twig->render('/updateanswer.twig', ['question' => $question, 'answer' => $answer]);
+        
     }
 }
