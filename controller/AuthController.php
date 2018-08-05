@@ -4,9 +4,7 @@ namespace Controller;
 
 use \Model\Auth;
 
-class AuthController
 {
-
     public function __construct($connection, $twig)
     {
         $this->connection = $connection;
@@ -44,7 +42,8 @@ class AuthController
         return $auth->logout();
     }
 
- public function manage() {
+    public function manage() 
+    {
         $auth = new Auth($this->connection);
         $check = $auth->isAuthorized();
         if ($check) {
@@ -55,7 +54,8 @@ class AuthController
         }
     }
 
-  public function registerNew() {
+    public function registerNew() 
+    {
         $auth = new Auth($this->connection);
         $errors = [];
         if (count($_POST) > 0) {
@@ -79,33 +79,33 @@ class AuthController
         echo $this->twig->render('/regform.twig');
     }
 
-    public function deleteUser($id) {
+    public function deleteUser($id) 
+    {
         $auth = new Auth($this->connection);
         $delete = $auth->deleteUser($id);
-            if ($delete) {
-                header('Location: ?c=auth&a=handleusers');
-            }
-
+        if ($delete) {
+            header('Location: ?c=auth&a=handleusers');
+        }
     }
 
-    public function updateUser($id) {
+    public function updateUser($id) 
+    {
         $id = intval($id);
         $auth = new Auth($this->connection);
         $user = $auth->findUser($id);
         if (count($_POST) > 0) {
-        $password = $_POST['password'];
-        $update = $auth->updateUser($id, $password);
+            $password = $_POST['password'];
+            $update = $auth->updateUser($id, $password);
             if ($update) {
                 header('Location: ?c=auth&a=handleusers');
             }
-        }
-        else {
+        } else {
             echo $this->twig->render('/passchangeform.twig', ['user' => $user]);
         }
-
     }
 
-        public function handleUsers() {
+    public function handleUsers() 
+    {
         $auth = new Auth($this->connection);
         $users = $auth->listAll();
         echo $this->twig->render('/handleusers.twig', ['users' => $users]);
