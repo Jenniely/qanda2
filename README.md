@@ -1,9 +1,5 @@
-# QandA - система для ответов на пользовательские вопросы.
+# QandA: a system to manage questions and answers
 
-Для установки системы скопируйте содержимое репозитория на хостинг или на локальный сервер.
+A simple but functional PHP app that can accept questions and allows to input answers, sort them, publish/hide and delete them.
 
-Используйте дамп или чистую структуру базы данных из папки sql для воссоздания БД.
 
-Используйте менеджер Composer и файл composer.json из папки проекта для загрузки необходимых библиотек при помощи команды install в терминале.
-
-После того, как composer произведет автозагрузку, можно начинать использование системы, точка входа -  index.php.
